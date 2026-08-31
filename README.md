@@ -1,68 +1,62 @@
 # Classification Analysis in R — Linear Discriminant Analysis (LDA)
 
-Classification analysis project developed in R, focusing on supervised classification, model comparison, and test-set prediction.
+A supervised classification project developed in R, focusing on data preparation, feature selection, classification model comparison, Linear Discriminant Analysis (LDA), and prediction of unseen observations.
+
+---
 
 ## Project Overview
 
-This project applies supervised classification techniques to a structured dataset using R.
+This project applies supervised machine learning techniques to a structured dataset using R.
 
 The main objective is to develop a classification model capable of predicting the target class for previously unseen observations.
 
-The analysis includes:
+The project covers the complete workflow from data loading and preprocessing to model training, prediction, and generation of an output file.
 
-- Data loading and preparation
-- Feature selection and preprocessing
+### Main stages of the analysis
+
+- Data loading
+- Data inspection
+- Data preprocessing
+- Target variable preparation
+- Feature selection
+- Classification model development
+- Model comparison
 - Linear Discriminant Analysis (LDA)
-- Comparison of classification models
 - Test-set prediction
-- Generation of a prediction file
+- Generation of prediction output
+
+---
 
 ## Objective
 
-The objective of this project is to build and evaluate classification models and select the model that provides the strongest validation performance.
+The primary objective of this project is to build and evaluate classification models and select the most suitable model for predicting the target variable.
 
-After comparing several classification approaches, Linear Discriminant Analysis (LDA) was selected as the preferred model.
+Several classification approaches were considered during the analysis:
 
-## Technologies
-
-- R
-- RStudio
 - Linear Discriminant Analysis (LDA)
-- MASS
-- readr
-- CSV data
+- Quadratic Discriminant Analysis (QDA)
+- Naive Bayes
+- K-Nearest Neighbours (KNN)
 
-## Dataset
+After comparing the models across different random seeds, LDA was selected as the preferred classification approach based on its validation performance.
 
-The dataset used for this analysis is not included in this repository.
+---
 
-The training dataset contains the target variable used for classification, while the test dataset contains observations for which predictions are generated.
+## Technologies and Tools
 
-The following variables were excluded from the modelling process:
+The project was developed using:
 
-- `ID`
-- `V4`
-- `V5`
+- **R**
+- **RStudio**
+- **MASS**
+- **readr**
+- **CSV datasets**
+- **Linear Discriminant Analysis (LDA)**
 
-The `target` variable was converted to a factor for classification.
+### R Packages
 
-> **Note:** The datasets are kept private and are therefore not uploaded to this repository.
+The main R packages used are:
 
-## Methodology
-
-### 1. Data Preparation
-
-The training and test datasets were loaded using the `readr` package.
-
-The target variable was converted into a factor to allow classification modelling.
-
-The `ID` variable was retained separately so that it could be included in the final prediction file.
-
-### 2. Feature Selection
-
-The following variables were removed before modelling:
-
-```text
-ID
-V4
-V5
+```r
+library(readr)
+library(MASS)
