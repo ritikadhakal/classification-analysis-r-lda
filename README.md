@@ -4,29 +4,49 @@ Classification analysis project developed in R, focusing on supervised classific
 
 ## Project Overview
 
-This project applies classification techniques to a structured dataset using R.
+This project applies supervised classification techniques to a structured dataset using R.
+
+The main objective is to develop a classification model capable of predicting the target class for previously unseen observations.
 
 The analysis includes:
 
 - Data loading and preparation
 - Feature selection and preprocessing
 - Linear Discriminant Analysis (LDA)
-- Model comparison
+- Comparison of classification models
 - Test-set prediction
 - Generation of a prediction file
 
 ## Objective
 
-The main objective was to build a classification model capable of predicting the target class for unseen observations.
+The objective of this project is to build and evaluate classification models and select the model that provides the strongest validation performance.
 
-Several classification approaches were considered, including:
+After comparing several classification approaches, Linear Discriminant Analysis (LDA) was selected as the preferred model.
 
+## Technologies
+
+- R
+- RStudio
 - Linear Discriminant Analysis (LDA)
-- Quadratic Discriminant Analysis (QDA)
-- Naive Bayes
-- K-Nearest Neighbors (KNN)
+- MASS
+- readr
+- CSV data
 
-Based on the model comparison performed during the analysis, LDA was selected as the preferred classification model.
+## Dataset
+
+The dataset used for this analysis is not included in this repository.
+
+The training dataset contains the target variable used for classification, while the test dataset contains observations for which predictions are generated.
+
+The following variables were excluded from the modelling process:
+
+- `ID`
+- `V4`
+- `V5`
+
+The `target` variable was converted to a factor for classification.
+
+> **Note:** The datasets are kept private and are therefore not uploaded to this repository.
 
 ## Methodology
 
@@ -34,53 +54,15 @@ Based on the model comparison performed during the analysis, LDA was selected as
 
 The training and test datasets were loaded using the `readr` package.
 
-The target variable was converted into a factor for classification.
+The target variable was converted into a factor to allow classification modelling.
 
-The following columns were excluded from the modelling process:
+The `ID` variable was retained separately so that it could be included in the final prediction file.
 
-- `ID`
-- `V4`
-- `V5`
+### 2. Feature Selection
 
-The `ID` variable was retained separately so that predictions could be associated with the original observations.
-
-### 2. Linear Discriminant Analysis
-
-An LDA model was trained using the training features and target variable.
-
-The model was then used to generate class predictions for the test dataset.
-
-### 3. Model Selection
-
-LDA, QDA, Naive Bayes, and KNN (k = 5) were evaluated during the analysis.
-
-The models were compared across multiple random seeds:
-
-- 100
-- 150
-- 70
-
-According to the analysis, LDA consistently achieved the highest validation accuracy and was therefore selected for the final prediction task.
-
-## Technologies
-
-- R
-- RStudio
-- Linear Discriminant Analysis
-- QDA
-- Naive Bayes
-- K-Nearest Neighbors
-- `readr`
-- `MASS`
-
-## Project Structure
+The following variables were removed before modelling:
 
 ```text
-classification-analysis-r-lda/
-│
-├── README.md
-├── classification_lda.R
-├── data/
-│   └── README.md
-└── results/
-    └── README.md
+ID
+V4
+V5
