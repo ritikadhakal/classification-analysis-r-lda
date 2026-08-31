@@ -1,5 +1,5 @@
 # ============================================================
-# Classification Analysis using Linear Discriminant Analysis
+# Classification Analysis in R - Linear Discriminant Analysis
 # ============================================================
 
 # Load required libraries
@@ -7,46 +7,55 @@ library(readr)
 library(MASS)
 
 # ------------------------------------------------------------
-# 1. Load Data
+# 1. Load data
+# ------------------------------------------------------------
+# The datasets are kept private and are not included in this
+# GitHub repository.
+#
+# Update these paths to the location of the datasets on your
+# computer before running the script.
+
+train_data <- read_csv("path/to/train_data.csv")
+test_features <- read_csv("path/to/test_features.csv")
+
+# View the datasets
+View(train_data)
+View(test_features)
+
+# ------------------------------------------------------------
+# 2. Prepare the target variable
 # ------------------------------------------------------------
 
-# Training and test datasets should be placed in the data/ folder
-train_data <- read_csv("data/train_data.csv")
-test_features <- read_csv("data/test_features.csv")
-
-# ------------------------------------------------------------
-# 2. Prepare Data
-# ------------------------------------------------------------
-
-# Convert target variable to factor for classification
+# Convert target variable to a factor for classification
 train_data$target <- as.factor(train_data$target)
 
-# Extract ID column from test data
+# Store test IDs for the final prediction file
 test_ids <- test_features$ID
 
 # ------------------------------------------------------------
-# 3. Prepare Training Features
+# 3. Prepare training features
 # ------------------------------------------------------------
 
-# Remove ID, target, and problematic columns V4 and V5
+# Remove ID, target, and problematic variables
+# V4 and V5 were excluded from the analysis.
 train_features <- train_data[
   !(names(train_data) %in% c("ID", "target", "V4", "V5"))
 ]
 
-# Store the target variable separately
+# Store classification labels
 train_labels <- train_data$target
 
 # ------------------------------------------------------------
-# 4. Prepare Test Features
+# 4. Prepare test features
 # ------------------------------------------------------------
 
-# Remove ID and problematic columns V4 and V5
-test_features_clean <- test_features[
+# Remove variables that are not used by the model
+test_features_model <- test_features[
   !(names(test_features) %in% c("ID", "V4", "V5"))
 ]
 
 # ------------------------------------------------------------
-# 5. Train LDA Model
+# 5. Train LDA model
 # ------------------------------------------------------------
 
 lda_model <- lda(
@@ -54,17 +63,23 @@ lda_model <- lda(
   data = train_features
 )
 
+# Display model information
+print(lda_model)
+
 # ------------------------------------------------------------
-# 6. Generate Test-Set Predictions
+# 6. Predict test observations
 # ------------------------------------------------------------
 
 lda_pred <- predict(
   lda_model,
-  newdata = test_features_clean
+  newdata = test_features_model
 )$class
 
+# Display predictions
+print(lda_pred)
+
 # ------------------------------------------------------------
-# 7. Create Prediction Output
+# 7. Create prediction file
 # ------------------------------------------------------------
 
 submission <- data.frame(
@@ -72,7 +87,7 @@ submission <- data.frame(
   Prediction = lda_pred
 )
 
-# Save predictions as a CSV file
+# Save predictions
 write.csv(
   submission,
   "81348_predictions.csv",
@@ -80,14 +95,23 @@ write.csv(
 )
 
 # ------------------------------------------------------------
-# 8. Model Selection
+# 8. Model selection
 # ------------------------------------------------------------
 
-# LDA, QDA, Naive Bayes, and KNN (k = 5) were tested
-# across multiple random seeds: 100, 150, and 70.
+# Multiple classification models were evaluated during the
+# analysis, including:
 #
-# Based on the model comparison performed during the analysis,
-# LDA consistently achieved the highest validation accuracy.
+# - Linear Discriminant Analysis (LDA)
+# - Quadratic Discriminant Analysis (QDA)
+# - Naive Bayes
+# - K-Nearest Neighbours (KNN, k = 5)
 #
-# Therefore, LDA was selected as the preferred model for the
-# final classification and test-set prediction.
+# The models were evaluated across different random seeds
+# (100, 150, and 70).
+#
+# LDA consistently achieved the highest validation accuracy
+# and was therefore selected as the preferred model.
+#
+# ------------------------------------------------------------
+# End of analysis
+# ------------------------------------------------------------
