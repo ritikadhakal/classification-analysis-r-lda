@@ -1,45 +1,93 @@
+# ============================================================
+# Classification Analysis using Linear Discriminant Analysis
+# ============================================================
+
 # Load required libraries
-library(readr)     # For reading CSV files
-library(MASS)         #for LDA
+library(readr)
+library(MASS)
 
-# Load training data
-train_data <- read_csv("C:/Users/ritik/OneDrive/Desktop/Data Analysis/008148/train_data.csv")
-View(train_data)
+# ------------------------------------------------------------
+# 1. Load Data
+# ------------------------------------------------------------
 
-#load test data
-test_features <- read_csv("C:/Users/ritik/Downloads/test_features.csv")
-View(test_features)
+# Training and test datasets should be placed in the data/ folder
+train_data <- read_csv("data/train_data.csv")
+test_features <- read_csv("data/test_features.csv")
 
-# Convert target column to factor for classification
+# ------------------------------------------------------------
+# 2. Prepare Data
+# ------------------------------------------------------------
+
+# Convert target variable to factor for classification
 train_data$target <- as.factor(train_data$target)
-test_ids <- test_features$ID    #Extract ID column from test data and store it in test_ids
 
-#  I Prepare training features (drop ID, target, and problematic columns V4, V5)
-train_featuress <- train_data[, !(names(train_data) %in% c("ID", "target", "V4", "V5"))]
+# Extract ID column from test data
+test_ids <- test_features$ID
+
+# ------------------------------------------------------------
+# 3. Prepare Training Features
+# ------------------------------------------------------------
+
+# Remove ID, target, and problematic columns V4 and V5
+train_features <- train_data[
+  !(names(train_data) %in% c("ID", "target", "V4", "V5"))
+]
+
+# Store the target variable separately
 train_labels <- train_data$target
 
-# I also prepare test features again by dropping (ID, V4, V5)
-test_featuress <- test_features[, !(names(test_features) %in% c("ID", "V4", "V5"))]
+# ------------------------------------------------------------
+# 4. Prepare Test Features
+# ------------------------------------------------------------
 
-# I train LDA model with training data set
-lda_model <- lda(train_labels ~ ., data = train_featuress)
+# Remove ID and problematic columns V4 and V5
+test_features_clean <- test_features[
+  !(names(test_features) %in% c("ID", "V4", "V5"))
+]
 
-# I predict on test set
-lda_pred <- predict(lda_model, newdata = test_featuress)$class
+# ------------------------------------------------------------
+# 5. Train LDA Model
+# ------------------------------------------------------------
 
-# # Prepare submission data frame with IDs and Prediction.
-submission <- data.frame(ID = test_ids, Prediction = lda_pred)
+lda_model <- lda(
+  train_labels ~ .,
+  data = train_features
+)
 
-#  I save the file in csv form with my number
-write.csv(submission, "81348_predictions.csv", row.names = FALSE)
+# ------------------------------------------------------------
+# 6. Generate Test-Set Predictions
+# ------------------------------------------------------------
 
-# Model Choice:
-# After testing multiple classification models — LDA, QDA, Naive Bayes, and KNN (k=5) — 
-# across various random seeds (100, 150, 70), 
-# LDA consistently achieved the highest accuracy on validation sets.
-# Therefore,  I choose LDA as the preferred model for this classification task.
-# --------------------------------------------------------------------------------
+lda_pred <- predict(
+  lda_model,
+  newdata = test_features_clean
+)$class
 
+# ------------------------------------------------------------
+# 7. Create Prediction Output
+# ------------------------------------------------------------
 
+submission <- data.frame(
+  ID = test_ids,
+  Prediction = lda_pred
+)
 
+# Save predictions as a CSV file
+write.csv(
+  submission,
+  "81348_predictions.csv",
+  row.names = FALSE
+)
 
+# ------------------------------------------------------------
+# 8. Model Selection
+# ------------------------------------------------------------
+
+# LDA, QDA, Naive Bayes, and KNN (k = 5) were tested
+# across multiple random seeds: 100, 150, and 70.
+#
+# Based on the model comparison performed during the analysis,
+# LDA consistently achieved the highest validation accuracy.
+#
+# Therefore, LDA was selected as the preferred model for the
+# final classification and test-set prediction.
